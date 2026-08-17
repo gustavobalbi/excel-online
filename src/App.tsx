@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Editor } from "./components/Editor";
 import { SettingsModal } from "./components/SettingsModal";
 import { api, usandoMock } from "./api/client";
@@ -6,8 +6,9 @@ import { CONFIG } from "./config";
 import type { WorkbookSnapshot } from "./api/types";
 import type { UniverHandle } from "./lib/univer";
 import { saveActiveSnapshot, buildWorkbookData, snapshotToSheets } from "./lib/univer";
-import { readXlsx, downloadXlsx } from "./lib/xlsx";
+import { downloadXlsx } from "./lib/xlsx";
 import { getCodigo } from "./lib/connectionCode";
+import { useXlsxParser } from "./hooks/useXlsxParser";
 
 export default function App() {
   const [status, setStatus] = useState<string>("");
@@ -20,18 +21,33 @@ export default function App() {
 
   const handleRef = useRef<UniverHandle | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { parse, dispose } = useXlsxParser();
+
+  useEffect(() => {
+    return () => dispose();
+  }, [dispose]);
 
   async function importar(file: File) {
     try {
       setIsImporting(true);
       setStatus(`Importando ${file.name}…`);
-      const sheets = await readXlsx(file);
-      setInitialData(buildWorkbookData(sheets));
-      setEditorKey((k) => k + 1); // remonta o editor com os dados importados
-      setStatus(`✓ Importado: ${file.name} (${sheets.length} aba(s))`);
+
+      parse(
+        file,
+        (status) => setStatus(status),
+        (sheets) => {
+          setInitialData(buildWorkbookData(sheets));
+          setEditorKey((k) => k + 1);
+          setStatus(`✓ Importado: ${file.name} (${sheets.length} aba(s))`);
+          setIsImporting(false);
+        },
+        (error) => {
+          setStatus(`✗ Erro ao importar: ${error}`);
+          setIsImporting(false);
+        },
+      );
     } catch (e) {
-      setStatus(`✗ Erro ao importar: ${e instanceof Error ? e.message : "desconhecido"}`);
-    } finally {
+      setStatus(`✗ Erro ao ler arquivo: ${e instanceof Error ? e.message : "desconhecido"}`);
       setIsImporting(false);
     }
   }
