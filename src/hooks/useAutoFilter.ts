@@ -14,32 +14,14 @@ export function useAutoFilter(handle: UniverHandle | null) {
       const worksheet = workbook.getActiveSheet();
       if (!worksheet) return;
 
-      // Aplicar AutoFilter na primeira linha (header)
-      // Univer.js aplica AutoFilter via SetRowFilterCommand
-      const command = {
-        id: "sheet.command.set-filter-criteria",
-        params: {
-          sheetId: worksheet.getSheetId(),
-          range: {
-            startRow: 0,
-            endRow: 0,
-            startColumn: 0,
-            endColumn: 100, // assumir 100 colunas como limite
-          },
-        },
-      };
-
-      // Tentar executar comando (pode não estar disponível na versão)
-      try {
-        handle.univerAPI.executeCommand(command);
-        autoFilterAppliedRef.current = true;
-      } catch {
-        // Versão do Univer pode não suportar este comando
-        // AutoFilter pode ser habilitado via UI do usuário
-        console.debug("AutoFilter não disponível nesta versão do Univer");
-      }
+      // Nota: AutoFilter nativo do Univer pode ser ativado via UI
+      // (clique direito em célula → Filtro Automático)
+      // A API de automação via código pode variar conforme a versão do Univer
+      // Por enquanto, apenas marcamos que foi tentado
+      autoFilterAppliedRef.current = true;
+      console.debug("AutoFilter hook ready (use UI para ativar)");
     } catch (e) {
-      console.debug("Erro ao habilitar AutoFilter:", e);
+      console.debug("Erro ao preparar AutoFilter:", e);
     }
   }, [handle]);
 

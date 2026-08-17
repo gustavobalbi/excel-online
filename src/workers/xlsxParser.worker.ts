@@ -29,8 +29,6 @@ interface ErrorMessage {
   error: string;
 }
 
-type WorkerMessage = ProgressMessage | CompleteMessage | ErrorMessage;
-
 self.onmessage = async (event: MessageEvent<ParserMessage>) => {
   const { type, arrayBuffer } = event.data;
 
