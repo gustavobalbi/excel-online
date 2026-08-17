@@ -1,0 +1,27 @@
+/* Estilos mínimos e neutros — layout apenas. Paleta/estética virão depois. */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { font-family: system-ui, sans-serif; color: #1a1a1a; }
+
+.app { display: flex; flex-direction: column; height: 100vh; }
+
+.toolbar { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border-bottom: 1px solid #ddd; }
+.toolbar .spacer { flex: 1; }
+.toolbar .status { font-size: 13px; color: #666; }
+
+.editor-surface { flex: 1; min-height: 0; }
+
+button { padding: 6px 12px; border: 1px solid #ccc; background: #fff; border-radius: 6px; cursor: pointer; font-size: 14px; }
+button:hover { background: #f5f5f5; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+button.primary { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+
+.badge-mock { font-size: 12px; background: #fff4d6; border: 1px solid #e6cf7a; padding: 2px 8px; border-radius: 999px; }
+
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.3); display: grid; place-items: center; }
+.modal { background: #fff; border-radius: 10px; padding: 20px; width: 420px; max-width: 90vw; }
+.modal h3 { margin-top: 0; }
+.modal label { display: block; font-size: 13px; margin: 12px 0 4px; color: #444; }
+.modal input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+.modal .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+.code-reveal { font-family: ui-monospace, monospace; background: #f5f5f5; padding: 8px; border-radius: 6px; word-break: break-all; font-size: 13px; }
