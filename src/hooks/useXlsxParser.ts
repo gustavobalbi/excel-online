@@ -1,4 +1,5 @@
 import { useRef, useCallback } from "react";
+import XlsxParserWorker from "../workers/xlsxParser.worker.ts?worker";
 
 interface ParsedSheet {
   name: string;
@@ -17,10 +18,7 @@ export function useXlsxParser() {
     ): (() => void) => {
       // Lazy-load worker (apenas cria uma instância)
       if (!workerRef.current) {
-        workerRef.current = new Worker(
-          new URL("../workers/xlsxParser.worker.ts", import.meta.url),
-          { type: "module" },
-        );
+        workerRef.current = new XlsxParserWorker();
       }
 
       const worker = workerRef.current;
