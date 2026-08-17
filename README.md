@@ -45,6 +45,12 @@ src/
 2. Importar `.xlsx` ou editar direto. Abas livres dentro do único workbook.
 3. **Publicar** → snapshot do workbook vai pro back com o código no header.
 
+## Filtros
+
+- **SearchFilter** (barra de busca na toolbar): busca case-insensitive em todas as colunas, parcial. Útil para navegar em dados grandes.
+- **AutoFilter (Univer nativo)**: clique com botão direito em qualquer célula → selecione "Filtro Automático" ou use menu Data do Univer. Ativa dropdowns nos headers para filtrar por valores específicos.
+- **Performance**: Importação de 20MB+ não congela a UI graças ao Web Worker de parsing paralelo.
+
 ## Decisões técnicas embutidas
 
 - **Duas serializações distintas**: o *snapshot do Univer* (workbook em JSON) é o payload

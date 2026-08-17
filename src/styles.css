@@ -5,8 +5,16 @@ body { font-family: system-ui, sans-serif; color: #1a1a1a; }
 
 .app { display: flex; flex-direction: column; height: 100vh; }
 
-.toolbar { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border-bottom: 1px solid #ddd; }
-.toolbar .spacer { flex: 1; }
+/* Toolbar com suporte para SearchFilter responsivo */
+.toolbar { 
+  display: flex; 
+  gap: 8px; 
+  align-items: center; 
+  padding: 8px 12px; 
+  border-bottom: 1px solid #ddd;
+  flex-wrap: wrap;
+}
+.toolbar .spacer { flex: 1; min-width: 0; }
 .toolbar .status { font-size: 13px; color: #666; }
 
 .editor-surface { flex: 1; min-height: 0; }

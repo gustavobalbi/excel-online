@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { Editor } from "./components/Editor";
 import { SettingsModal } from "./components/SettingsModal";
+import { SearchFilter } from "./components/SearchFilter";
 import { api, usandoMock } from "./api/client";
 import { CONFIG } from "./config";
 import type { WorkbookSnapshot } from "./api/types";
@@ -14,6 +15,7 @@ export default function App() {
   const [status, setStatus] = useState<string>("");
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // dados iniciais do editor + chave p/ forçar remontagem ao importar
   const [initialData, setInitialData] = useState<WorkbookSnapshot | undefined>();
@@ -103,6 +105,7 @@ export default function App() {
         </button>
         <button onClick={exportar} disabled={isImporting}>Exportar .xlsx</button>
         <button onClick={() => setSettingsOpen(true)} disabled={isImporting}>Configurações</button>
+        <SearchFilter onFilterChange={setSearchQuery} isDisabled={isImporting} />
         <span className="spacer" />
         <span className="status">{status}</span>
         {usandoMock && <span className="badge-mock">modo mock (sem servidor)</span>}
