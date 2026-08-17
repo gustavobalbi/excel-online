@@ -12,6 +12,7 @@ import { getCodigo } from "./lib/connectionCode";
 export default function App() {
   const [status, setStatus] = useState<string>("");
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
 
   // dados iniciais do editor + chave p/ forçar remontagem ao importar
   const [initialData, setInitialData] = useState<WorkbookSnapshot | undefined>();
@@ -21,10 +22,18 @@ export default function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function importar(file: File) {
-    const sheets = await readXlsx(file);
-    setInitialData(buildWorkbookData(sheets));
-    setEditorKey((k) => k + 1); // remonta o editor com os dados importados
-    setStatus(`Importado: ${file.name} (${sheets.length} aba(s))`);
+    try {
+      setIsImporting(true);
+      setStatus(`Importando ${file.name}…`);
+      const sheets = await readXlsx(file);
+      setInitialData(buildWorkbookData(sheets));
+      setEditorKey((k) => k + 1); // remonta o editor com os dados importados
+      setStatus(`✓ Importado: ${file.name} (${sheets.length} aba(s))`);
+    } catch (e) {
+      setStatus(`✗ Erro ao importar: ${e instanceof Error ? e.message : "desconhecido"}`);
+    } finally {
+      setIsImporting(false);
+    }
   }
 
   function exportar() {
@@ -73,9 +82,11 @@ export default function App() {
         <strong style={{ fontSize: 14 }}>{CONFIG.cod_relatorio}</strong>
         <span style={{ fontSize: 13, color: "#888" }}>{CONFIG.nome_relatorio}</span>
         <span style={{ width: 8 }} />
-        <button onClick={() => fileInputRef.current?.click()}>Importar .xlsx</button>
-        <button onClick={exportar}>Exportar .xlsx</button>
-        <button onClick={() => setSettingsOpen(true)}>Configurações</button>
+        <button onClick={() => fileInputRef.current?.click()} disabled={isImporting}>
+          {isImporting ? "Importando…" : "Importar .xlsx"}
+        </button>
+        <button onClick={exportar} disabled={isImporting}>Exportar .xlsx</button>
+        <button onClick={() => setSettingsOpen(true)} disabled={isImporting}>Configurações</button>
         <span className="spacer" />
         <span className="status">{status}</span>
         {usandoMock && <span className="badge-mock">modo mock (sem servidor)</span>}
